@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Happy AI</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            background: #050505;
+            color: #00e5ff;
+            font-family: Arial;
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        h1 {
+            font-size: 55px;
+            letter-spacing: 8px;
+        }
+
+        button {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: none;
+            background: #00e5ff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        #output {
+            margin: 40px 20px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>HAPPY</h1>
+
+    <button onclick="talk()">TALK</button>
+
+    <div id="output">
+        Hello! I am Happy.
+    </div>
+
+    <script>
+        function talk() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        document.getElementById("output").innerText =
+            "Voice recognition is not supported.";
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "en-IN";
+    recognition.interimResults = false;
+
+    document.getElementById("output").innerText =
+        "🎤 Listening...";
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+
+        const text =
+            event.results[0][0].transcript;
+
+        document.getElementById("output").innerText =
+            "You said: " + text;
+
+        let voice = new SpeechSynthesisUtterance(
+            "You said " + text
+        );
+
+        voice.lang = "en-IN";
+
+        speechSynthesis.speak(voice);
+    };
+
+    recognition.onerror = function() {
+
+        document.getElementById("output").innerText =
+            "Sorry, I couldn't hear you.";
+    };
+        }
+    </script>
+
+</body>
+</html>
