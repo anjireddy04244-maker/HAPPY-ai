@@ -48,7 +48,68 @@
     </div>
 
     <script>
-        
+        function talk() {
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        document.getElementById("output").innerText =
+            "Voice recognition is not supported.";
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "en-IN";
+    recognition.interimResults = false;
+
+    document.getElementById("output").innerText =
+        "🎤 Listening...";
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+
+        const text =
+            event.results[0][0].transcript.toLowerCase();
+
+        document.getElementById("output").innerText =
+            "You said: " + text;
+
+        let answer = "";
+
+        if (text.includes("hello") || text.includes("hi")) {
+            answer = "Hello! I am Happy. How can I help you?";
+        }
+        else if (text.includes("your name")) {
+            answer = "My name is Happy. I am your personal AI assistant.";
+        }
+        else if (text.includes("how are you")) {
+            answer = "I am doing great! Thank you for asking.";
+        }
+        else {
+            answer = "I heard you say " + text +
+                     ". I am still learning how to answer that.";
+        }
+
+        document.getElementById("output").innerText =
+            answer;
+
+        const voice = new SpeechSynthesisUtterance(answer);
+        voice.lang = "en-IN";
+        voice.rate = 1;
+        voice.pitch = 1;
+
+        speechSynthesis.cancel();
+        speechSynthesis.speak(voice);
+    };
+
+    recognition.onerror = function(event) {
+        document.getElementById("output").innerText =
+            "Sorry, I couldn't hear you.";
+    };
+}
 
     const recognition = new SpeechRecognition();
 
