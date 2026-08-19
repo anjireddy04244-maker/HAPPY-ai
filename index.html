@@ -10,7 +10,7 @@
         body {
             background: #050505;
             color: #00e5ff;
-            font-family: Arial;
+            font-family: Arial, sans-serif;
             text-align: center;
             padding-top: 80px;
         }
@@ -26,6 +26,7 @@
             border-radius: 50%;
             border: none;
             background: #00e5ff;
+            color: #050505;
             font-size: 20px;
             font-weight: bold;
         }
@@ -33,6 +34,7 @@
         #output {
             margin: 40px 20px;
             font-size: 20px;
+            min-height: 50px;
         }
     </style>
 </head>
@@ -41,21 +43,39 @@
 
     <h1>HAPPY</h1>
 
-    <button onclick="talk()">TALK</button>
+    <button onclick="talk()">🎤 TALK</button>
 
     <div id="output">
-        Hello! I am Happy.
+        Tap the button and talk to Happy
     </div>
 
-    <script>
-        function talk() {
+<script>
+
+function speak(answer) {
+
+    document.getElementById("output").innerText = answer;
+
+    const voice = new SpeechSynthesisUtterance(answer);
+
+    voice.lang = "en-IN";
+    voice.rate = 1;
+    voice.pitch = 1;
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(voice);
+}
+
+
+function talk() {
+
     const SpeechRecognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-        document.getElementById("output").innerText =
-            "Voice recognition is not supported.";
+
+        speak("Voice recognition is not supported on this browser.");
+
         return;
     }
 
@@ -63,11 +83,13 @@
 
     recognition.lang = "en-IN";
     recognition.interimResults = false;
+    recognition.continuous = false;
 
     document.getElementById("output").innerText =
         "🎤 Listening...";
 
     recognition.start();
+
 
     recognition.onresult = function(event) {
 
@@ -77,84 +99,83 @@
         document.getElementById("output").innerText =
             "You said: " + text;
 
-        let answer = "";
 
-        if (text.includes("hello") || text.includes("hi")) {
-            answer = "Hello! I am Happy. How can I help you?";
+        let answer;
+
+
+        if (text.includes("hello") ||
+            text.includes("hi") ||
+            text.includes("hey")) {
+
+            answer =
+                "Hello! I am Happy. How can I help you?";
         }
+
+
         else if (text.includes("your name")) {
-            answer = "My name is Happy. I am your personal AI assistant.";
+
+            answer =
+                "My name is Happy. I am your personal AI assistant.";
         }
+
+
         else if (text.includes("how are you")) {
-            answer = "I am doing great! Thank you for asking.";
+
+            answer =
+                "I am doing great. Thank you for asking!";
         }
+
+
+        else if (text.includes("who are you")) {
+
+            answer =
+                "I am Happy, your voice assistant.";
+        }
+
+
+        else if (text.includes("thank you") ||
+                 text.includes("thanks")) {
+
+            answer =
+                "You're welcome!";
+        }
+
+
+        else if (text.includes("good morning")) {
+
+            answer =
+                "Good morning! I hope you have a great day.";
+        }
+
+
+        else if (text.includes("good night")) {
+
+            answer =
+                "Good night! Sleep well.";
+        }
+
+
         else {
-            answer = "I heard you say " + text +
-                     ". I am still learning how to answer that.";
+
+            answer =
+                "I heard you say " + text +
+                ". I am still learning how to answer that.";
         }
 
-        document.getElementById("output").innerText =
-            answer;
 
-        const voice = new SpeechSynthesisUtterance(answer);
-        voice.lang = "en-IN";
-        voice.rate = 1;
-        voice.pitch = 1;
-
-        speechSynthesis.cancel();
-        speechSynthesis.speak(voice);
+        speak(answer);
     };
+
 
     recognition.onerror = function(event) {
+
         document.getElementById("output").innerText =
             "Sorry, I couldn't hear you.";
     };
+
 }
 
-    const recognition = new SpeechRecognition();
-
-    recognition.lang = "en-IN";
-    recognition.interimResults = false;
-
-    document.getElementById("output").innerTextfunction talk() {
-
-    const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) {
-        document.getElementById("output").innerText =
-            "Voice recognition is not supported.";
-        return;
-    } =
-        "🎤 Listening...";
-
-    recognition.start();
-
-    recognition.onresult = function(event) {
-
-        const text =
-            event.results[0][0].transcript;
-
-        document.getElementById("output").innerText =
-            "You said: " + text;
-
-        let voice = new SpeechSynthesisUtterance(
-            "You said " + text
-        );
-
-        voice.lang = "en-IN";
-
-        speechSynthesis.speak(voice);
-    };
-
-    recognition.onerror = function() {
-
-        document.getElementById("output").innerText =
-            "Sorry, I couldn't hear you.";
-    };
-        }
-    </script>
+</script>
 
 </body>
 </html>
