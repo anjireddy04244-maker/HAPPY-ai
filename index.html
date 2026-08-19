@@ -48,7 +48,14 @@
     </div>
 
     <script>
-        function talk() {
+        
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "en-IN";
+    recognition.interimResults = false;
+
+    document.getElementById("output").innerTextfunction talk() {
 
     const SpeechRecognition =
         window.SpeechRecognition ||
@@ -58,14 +65,7 @@
         document.getElementById("output").innerText =
             "Voice recognition is not supported.";
         return;
-    }
-
-    const recognition = new SpeechRecognition();
-
-    recognition.lang = "en-IN";
-    recognition.interimResults = false;
-
-    document.getElementById("output").innerText =
+    } =
         "🎤 Listening...";
 
     recognition.start();
