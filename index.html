@@ -1,334 +1,107 @@
-    <!DOCTYPE html>
-<html lang="en">
-
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
+  <title>Happy AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #050505;
+      color: #00e5ff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 80px;
+    }
 
-    <title>Happy AI</title>
+    h1 {
+      font-size: 55px;
+      letter-spacing: 8px;
+    }
 
-    <style>
+    button {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      border: none;
+      background: #00e5ff;
+      color: #050505;
+      font-size: 20px;
+      font-weight: bold;
+    }
 
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: #050505;
-            color: #00e5ff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-
-            padding: 30px 20px;
-        }
-
-        h1 {
-            font-size: 55px;
-            letter-spacing: 8px;
-            margin-bottom: 50px;
-        }
-
-        #talkButton {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: none;
-
-            background: #00e5ff;
-            color: #050505;
-
-            font-size: 21px;
-            font-weight: bold;
-
-            cursor: pointer;
-
-            box-shadow:
-                0 0 20px rgba(0, 229, 255, 0.5);
-
-            transition: transform 0.2s;
-        }
-
-        #talkButton:active {
-            transform: scale(0.95);
-        }
-
-        #talkButton.listening {
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-
-            0% {
-                transform: scale(1);
-                box-shadow:
-                    0 0 20px rgba(0, 229, 255, 0.5);
-            }
-
-            50% {
-                transform: scale(1.08);
-                box-shadow:
-                    0 0 45px rgba(0, 229, 255, 0.9);
-            }
-
-            100% {
-                transform: scale(1);
-                box-shadow:
-                    0 0 20px rgba(0, 229, 255, 0.5);
-            }
-        }
-
-        #output {
-            margin-top: 45px;
-            max-width: 700px;
-            min-height: 60px;
-
-            font-size: 20px;
-            line-height: 1.5;
-
-            color: #ffffff;
-        }
-
-        #status {
-            margin-top: 15px;
-            font-size: 15px;
-            color: #00e5ff;
-        }
-
-    </style>
-
+    #output {
+      margin: 40px 20px;
+      font-size: 20px;
+    }
+  </style>
 </head>
-
 
 <body>
 
-    <h1>HAPPY</h1>
+  <h1>HAPPY</h1>
 
-    <button id="talkButton">
-        🎤 TALK
-    </button>
+  <button onclick="talk()">🎤 TALK</button>
 
-    <div id="output">
-        Tap the button and talk to Happy
-    </div>
+  <div id="output">
+    Tap the button and talk to Happy
+  </div>
 
-    <div id="status"></div>
+  <script>
 
+    function talk() {
 
-<script>
-
-const talkButton =
-    document.getElementById("talkButton");
-
-const output =
-    document.getElementById("output");
-
-const statusText =
-    document.getElementById("status");
-
-
-function speak(answer) {
-
-    output.innerText = answer;
-
-    const voice =
-        new SpeechSynthesisUtterance(answer);
-
-    voice.lang = "en-IN";
-    voice.rate = 1;
-    voice.pitch = 1;
-
-    speechSynthesis.cancel();
-    speechSynthesis.speak(voice);
-}
-
-
-async function askHappy(message) {
-
-    output.innerText =
-        "🤔 Happy is thinking...";
-
-    statusText.innerText =
-        "Connecting to Happy AI...";
-
-
-    try {
-
-        const response =
-            await fetch("/api/chat", {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
-
-                body: JSON.stringify({
-                    message: message
-                })
-
-            });
-
-
-        const data =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.error ||
-                "AI request failed"
-            );
-
-        }
-
-
-        statusText.innerText = "";
-
-        speak(data.answer);
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        statusText.innerText = "";
-
-        speak(
-            "Sorry, I couldn't connect to Happy AI right now."
-        );
-
-    }
-
-}
-
-
-function talk() {
-
-    const SpeechRecognition =
+      const SpeechRecognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
 
-
-    if (!SpeechRecognition) {
-
-        speak(
-            "Voice recognition is not supported by this browser."
-        );
-
+      if (!SpeechRecognition) {
+        document.getElementById("output").innerText =
+          "Voice recognition is not supported.";
         return;
-    }
+      }
 
+      const recognition = new SpeechRecognition();
 
-    const recognition =
-        new SpeechRecognition();
+      recognition.lang = "en-IN";
+      recognition.interimResults = false;
+      recognition.continuous = false;
 
-
-    recognition.lang = "en-IN";
-    recognition.interimResults = false;
-    recognition.continuous = false;
-
-
-    output.innerText =
+      document.getElementById("output").innerText =
         "🎤 Listening...";
 
-    statusText.innerText =
-        "Speak now";
+      recognition.start();
 
+      recognition.onresult = function(event) {
 
-    talkButton.classList.add(
-        "listening"
-    );
+        const text =
+          event.results[0][0].transcript;
 
+        document.getElementById("output").innerText =
+          "You said: " + text;
 
-    try {
+        const voice =
+          new SpeechSynthesisUtterance(
+            "You said " + text
+          );
 
-        recognition.start();
+        voice.lang = "en-IN";
+
+        speechSynthesis.speak(voice);
+      };
+
+      recognition.onerror = function() {
+
+        document.getElementById("output").innerText =
+          "Sorry, I couldn't hear you.";
+      };
 
     }
 
-    catch (error) {
-
-        console.log(error);
-
-    }
-
-
-    recognition.onresult =
-        function(event) {
-
-            const text =
-                event.results[0][0]
-                .transcript;
-
-
-            output.innerText =
-                "You said: " + text;
-
-
-            statusText.innerText =
-                "Processing...";
-
-
-            askHappy(text);
-
-        };
-
-
-    recognition.onend =
-        function() {
-
-            talkButton.classList.remove(
-                "listening"
-            );
-
-        };
-
-
-    recognition.onerror =
-        function(event) {
-
-            console.log(
-                "Speech recognition error:",
-                event.error
-            );
-
-
-            talkButton.classList.remove(
-                "listening"
-            );
-
-
-            statusText.innerText = "";
-
-
-            speak(
-                "Sorry, I couldn't hear you. Please try again."
-            );
-
-        };
-
-}
-
-
-talkButton.addEventListener(
-    "click",
-    talk
-);
-
-</script>
+  </script>
 
 </body>
+</html>
 
-</html>        
+
+
+
