@@ -15,28 +15,34 @@ export default async function handler(req, res) {
         }
 
         const response = await fetch(
-            "https://api.groq.com/openai/v1/chat/completions",
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization":
-                        `Bearer ${process.env.GROQ_API_KEY}`
+                    "x-goog-api-key": process.env.GEMINI_API_KEY
                 },
                 body: JSON.stringify({
-                    model: "llama-3.1-8b-instant",
-                    messages: [
-                        {
-                            role: "system",
-                            content:
-                                "You are Happy AI, a friendly and helpful voice assistant. Give clear and concise answers."
-                        },
+                    systemInstruction: {
+                        parts: [
+                            {
+                                text: "You are Happy AI, a friendly and helpful voice assistant. Give clear, concise, natural answers."
+                            }
+                        ]
+                    },
+                    contents: [
                         {
                             role: "user",
-                            content: message
+                            parts: [
+                                {
+                                    text: message
+                                }
+                            ]
                         }
                     ],
-                    temperature: 0.7
+                    generationConfig: {
+                        temperature: 0.7
+                    }
                 })
             }
         );
@@ -49,12 +55,15 @@ export default async function handler(req, res) {
             return res.status(response.status).json({
                 error:
                     data.error?.message ||
-                    "AI request failed"
+                    "Gemini request failed"
             });
         }
 
         const answer =
-            data.choices?.[0]?.message?.content;
+            data.candidates?.[0]?.content?.parts
+                ?.map(part => part.text || "")
+                .join("")
+                .trim();
 
         return res.status(200).json({
             answer: answer || "I couldn't generate an answer."
@@ -67,4 +76,4 @@ export default async function handler(req, res) {
             error: "Server error"
         });
     }
-}        
+}                        
