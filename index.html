@@ -29,9 +29,14 @@
       font-weight: bold;
     }
 
+    button:disabled {
+      opacity: 0.5;
+    }
+
     #output {
       margin: 40px 20px;
       font-size: 20px;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -40,7 +45,7 @@
 
   <h1>HAPPY</h1>
 
-  <button onclick="talk()">🎤 TALK</button>
+  <button id="talkButton" onclick="talk()">🎤 TALK</button>
 
   <div id="output">
     Tap the button and talk to Happy
@@ -48,7 +53,7 @@
 
   <script>
 
-    function talk() {
+    async function talk() {
 
       const SpeechRecognition =
         window.SpeechRecognition ||
@@ -60,48 +65,89 @@
         return;
       }
 
+      const button = document.getElementById("talkButton");
+      const output = document.getElementById("output");
+
       const recognition = new SpeechRecognition();
 
       recognition.lang = "en-IN";
       recognition.interimResults = false;
       recognition.continuous = false;
 
-      document.getElementById("output").innerText =
-        "🎤 Listening...";
+      button.disabled = true;
+      output.innerText = "🎤 Listening...";
 
       recognition.start();
 
-      recognition.onresult = function(event) {
+      recognition.onresult = async function(event) {
 
         const text =
           event.results[0][0].transcript;
 
-        document.getElementById("output").innerText =
-          "You said: " + text;
+        output.innerText =
+          "You: " + text + "\n\n⏳ Happy is thinking...";
 
-        const voice =
-          new SpeechSynthesisUtterance(
-            "You said " + text
-          );
+        try {
 
-        voice.lang = "en-IN";
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              message: text
+            })
+          });
 
-        speechSynthesis.speak(voice);
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || "AI request failed");
+          }
+
+          const answer = data.answer;
+
+          output.innerText =
+            "You: " + text + "\n\nHappy: " + answer;
+
+          const voice =
+            new SpeechSynthesisUtterance(answer);
+
+          voice.lang = "en-IN";
+          voice.rate = 1;
+          voice.pitch = 1;
+
+          speechSynthesis.cancel();
+          speechSynthesis.speak(voice);
+
+        } catch (error) {
+
+          console.error(error);
+
+          output.innerText =
+            "Sorry, Happy couldn't connect to the AI.\n\n" +
+            error.message;
+        }
+
+        button.disabled = false;
       };
 
-      recognition.onerror = function() {
+      recognition.onerror = function(event) {
 
-        document.getElementById("output").innerText =
+        console.error(event);
+
+        output.innerText =
           "Sorry, I couldn't hear you.";
+
+        button.disabled = false;
       };
 
+      recognition.onend = function() {
+        button.disabled = false;
+      };
     }
 
   </script>
 
 </body>
 </html>
-
-
-
-
