@@ -110,6 +110,13 @@ if (
   output.innerText = "🌐 Opening Google...";
   window.location.href = "https://www.google.com/";
   return;
+     }if (
+  command === "open gmail" ||
+  command === "open gmail.com"
+) {
+  output.innerText = "📧 Opening Gmail...";
+  window.location.href = "https://mail.google.com/";
+  return;
      }
         output.innerText =
           "You: " + text + "\n\n⏳ Happy is thinking...";
