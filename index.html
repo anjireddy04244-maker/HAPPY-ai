@@ -83,17 +83,7 @@
 
         const text =
           event.results[0][0].transcript;
-const command = text.toLowerCase().trim();
-
-if (
-  command === "open youtube" ||
-  command === "open you tube" ||
-  command.includes("open youtube")
-) {
-  output.innerText = "📱 Opening YouTube...";
-  window.location.href = "https://www.youtube.com/";
-  return;
-}
+ 
         output.innerText =
           "You: " + text + "\n\n⏳ Happy is thinking...";
 
