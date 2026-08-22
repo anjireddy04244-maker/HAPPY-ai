@@ -145,9 +145,40 @@ if (
   command === "open google map"
 ) {
   output.innerText = "🗺️ Opening Google Maps...";
-  window.location.href = "https://maps.google.com/";
+
+  window.location.href = "https://www.google.com/maps/";
+
   return;
-     }
+}
+
+// Navigate to a place
+if (
+  command.startsWith("navigate to ") ||
+  command.startsWith("go to ") ||
+  command.startsWith("take me to ")
+) {
+  let destination = "";
+
+  if (command.startsWith("navigate to ")) {
+    destination = command.substring("navigate to ".length);
+  } else if (command.startsWith("go to ")) {
+    destination = command.substring("go to ".length);
+  } else if (command.startsWith("take me to ")) {
+    destination = command.substring("take me to ".length);
+  }
+
+  if (destination.trim() !== "") {
+    output.innerText = "🧭 Navigating to " + destination + "...";
+
+    const mapsURL =
+      "https://www.google.com/maps/dir/?api=1&destination=" +
+      encodeURIComponent(destination);
+
+    window.location.href = mapsURL;
+  }
+
+  return;
+}
         output.innerText =
           "You: " + text + "\n\n⏳ Happy is thinking...";
 
