@@ -185,7 +185,7 @@ if (
 ) {
   output.innerText = "📷 Opening Camera...";
 
-  window.location.href = "intent://camera/#Intent;scheme=android-app;package=com.android.camera2;end";
+  window.location.href = "intent://camera/#Intent;action=android.media.action.IMAGE_CAPTURE;end";
 
   return;
 }
