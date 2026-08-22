@@ -94,6 +94,16 @@ if (
   window.location.href = "https://www.youtube.com/";
   return;
 }
+     if (command.startsWith("search google for ")) {
+  const searchText = command.replace("search google for ", "").trim();
+
+  if (searchText) {
+    output.innerText = "🔎 Searching Google...";
+    window.location.href =
+      "https://www.google.com/search?q=" + encodeURIComponent(searchText);
+    return;
+  }
+     }   
         output.innerText =
           "You: " + text + "\n\n⏳ Happy is thinking...";
 
