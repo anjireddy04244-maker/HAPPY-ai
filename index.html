@@ -103,7 +103,14 @@ if (
       "https://www.google.com/search?q=" + encodeURIComponent(searchText);
     return;
   }
-     }   
+     }   if (
+  command === "open google" ||
+  command === "open google.com"
+) {
+  output.innerText = "🌐 Opening Google...";
+  window.location.href = "https://www.google.com/";
+  return;
+     }
         output.innerText =
           "You: " + text + "\n\n⏳ Happy is thinking...";
 
