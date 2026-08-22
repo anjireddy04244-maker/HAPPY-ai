@@ -178,16 +178,6 @@ if (
   }
 
   return;
-}if (
-  command === "open camera" ||
-  command === "open the camera" ||
-  command === "camera"
-) {
-  output.innerText = "📷 Opening Camera...";
-
-  window.location.href = "intent://camera/#Intent;action=android.media.action.IMAGE_CAPTURE;end";
-
-  return;
 }
         output.innerText =
           "You: " + text + "\n\n⏳ Happy is thinking...";
