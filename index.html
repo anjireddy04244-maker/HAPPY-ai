@@ -139,6 +139,24 @@ if (
   output.innerText = "📸 Opening Instagram...";
   window.location.href = "https://www.instagram.com/";
   return;
+     }if (
+  command.startsWith("navigate to ") ||
+  command.startsWith("go to ")
+) {
+  const place = command
+    .replace(/^navigate to\s+/i, "")
+    .replace(/^go to\s+/i, "")
+    .trim();
+
+  if (place) {
+    output.innerText = "🗺️ Navigating to " + place + "...";
+
+    window.location.href =
+      "https://www.google.com/maps/search/?api=1&query=" +
+      encodeURIComponent(place);
+
+    return;
+  }
      }
         output.innerText =
           "You: " + text + "\n\n⏳ Happy is thinking...";
