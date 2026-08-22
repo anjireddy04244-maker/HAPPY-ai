@@ -117,6 +117,13 @@ if (
   output.innerText = "📧 Opening Gmail...";
   window.location.href = "https://mail.google.com/";
   return;
+     }if (
+  command === "open whatsapp" ||
+  command === "open whats app"
+) {
+  output.innerText = "💬 Opening WhatsApp...";
+  window.location.href = "https://web.whatsapp.com/";
+  return;
      }
         output.innerText =
           "You: " + text + "\n\n⏳ Happy is thinking...";
