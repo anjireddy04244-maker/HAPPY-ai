@@ -133,6 +133,14 @@ if (
   window.location.href = "https://mail.google.com/";
   return;
      }if (
+  command === "open camera" ||
+  command === "camera"
+) {
+  output.innerText = "📷 Opening Camera...";
+  window.location.href = "happyai://camera";
+  return;
+     }
+        if (
   command === "open whatsapp" ||
   command === "open whats app"
 ) {
