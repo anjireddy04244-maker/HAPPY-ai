@@ -234,16 +234,16 @@ if (
 
         button.disabled = false;
       };
+recognition.onerror = function(event) {
 
-      recognition.onerror = function(event) {
+  console.error("Speech error:", event.error);
 
-        console.error(event);
+  output.innerText =
+    "Speech error: " + event.error;
 
-        output.innerText =
-          "Sorry, I couldn't hear you.";
-
-        button.disabled = false;
-      };
+  button.disabled = false;
+};
+      
 
       recognition.onend = function() {
         button.disabled = false;
