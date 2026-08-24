@@ -53,13 +53,78 @@
   <h1>HAPPY</h1>
 
   <button id="talkButton" onclick="talk()">🎤 TALK</button>
+<div>
+  <input
+    id="textInput"
+    type="text"
+    placeholder="Type to Happy..."
+  >
 
+  <button id="sendButton" onclick="sendText()">➤ SEND</button>
+</div>
   <div id="output">
     Tap the button and talk to Happy
   </div>
 
   <script>
+async function sendText() {
 
+  const input = document.getElementById("textInput");
+  const output = document.getElementById("output");
+
+  const text = input.value.trim();
+
+  if (!text) {
+    return;
+  }
+
+  input.value = "";
+
+  output.innerText =
+    "You: " + text + "\n\n⏳ Happy is thinking...";
+
+  try {
+
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: text
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "AI request failed");
+    }
+
+    const answer = data.answer;
+
+    output.innerText =
+      "You: " + text + "\n\nHappy: " + answer;
+
+    const voice =
+      new SpeechSynthesisUtterance(answer);
+
+    voice.lang = "en-IN";
+    voice.rate = 1;
+    voice.pitch = 1;
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(voice);
+
+  } catch (error) {
+
+    console.error(error);
+
+    output.innerText =
+      "Sorry, Happy couldn't connect to the AI.\n\n" +
+      error.message;
+  }
+}
     async function talk() {
 
       const SpeechRecognition =
