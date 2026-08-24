@@ -156,10 +156,7 @@ async function sendText() {
         const text =
           event.results[0][0].transcript;
 const command = text.toLowerCase().trim();
-if (
-  command.startsWith("search ") &&
-  command.includes(" in youtube")
-) {
+
   const searchText = command
     .replace(/^search\s+/i, "")
     .replace(/\s+in youtube$/i, "")
