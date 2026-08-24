@@ -15,23 +15,16 @@ export default async function handler(req, res) {
     }
 
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent",
+      "https://api.openai.com/v1/responses",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": process.env.GEMINI_API_KEY
+          "Authorization": "Bearer " + process.env.OPENAI_API_KEY
         },
         body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: message
-                }
-              ]
-            }
-          ]
+          model: "gpt-5.6",
+          input: message
         })
       }
     );
@@ -39,15 +32,14 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("Gemini error:", data);
+      console.error("OpenAI error:", data);
 
       return res.status(response.status).json({
-        error: data.error?.message || "Gemini request failed"
+        error: data.error?.message || "OpenAI request failed"
       });
     }
 
-    const answer =
-      data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const answer = data.output_text;
 
     return res.status(200).json({
       answer: answer || "I couldn't generate an answer."
