@@ -3,11 +3,12 @@
 <head>
   <link rel="manifest" href="/manifest.json">
 
-<meta name="theme-color" content="#000000">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Happy">
+  <meta name="theme-color" content="#000000">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Happy">
+
   <title>Happy AI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -53,26 +54,220 @@
   <h1>HAPPY</h1>
 
   <button id="talkButton" onclick="talk()">🎤 TALK</button>
-<div>
-  <input
-    id="textInput"
-    type="text"
-    placeholder="Type to Happy..."
-  >
 
-  <button id="sendButton" onclick="sendText()">➤ SEND</button>
-</div>
+  <div>
+    <input
+      id="textInput"
+      type="text"
+      placeholder="Type to Happy..."
+    >
+
+    <button id="sendButton" onclick="sendText()">➤ SEND</button>
+  </div>
+
   <div id="output">
     Tap the button and talk to Happy
   </div>
 
   <script>
+
+async function handleCommand(text) {
+
+  const output = document.getElementById("output");
+  const command = text.toLowerCase().trim();
+
+  // OPEN YOUTUBE
+  if (
+    command === "open youtube" ||
+    command === "open youtube.com"
+  ) {
+    output.innerText = "▶️ Opening YouTube...";
+    window.location.href = "https://www.youtube.com/";
+    return true;
+  }
+
+  // SEARCH YOUTUBE
+  if (
+    command.startsWith("search ") &&
+    command.includes(" in youtube")
+  ) {
+    const searchText = command
+      .replace(/^search\s+/i, "")
+      .replace(/\s+in youtube$/i, "")
+      .trim();
+
+    if (searchText) {
+      output.innerText = "🔎 Searching YouTube...";
+
+      window.location.href =
+        "https://www.youtube.com/results?search_query=" +
+        encodeURIComponent(searchText);
+
+      return true;
+    }
+  }
+
+  // SEARCH GOOGLE
+  if (command.startsWith("search google for ")) {
+
+    const searchText =
+      command.replace("search google for ", "").trim();
+
+    if (searchText) {
+      output.innerText = "🔎 Searching Google...";
+
+      window.location.href =
+        "https://www.google.com/search?q=" +
+        encodeURIComponent(searchText);
+
+      return true;
+    }
+  }
+
+  // SEARCH FOR SOMETHING IN GOOGLE
+  if (
+    command.startsWith("search for ") &&
+    command.includes(" in google")
+  ) {
+
+    const searchText = command
+      .replace(/^search for\s+/i, "")
+      .replace(/\s+in google$/i, "")
+      .trim();
+
+    if (searchText) {
+      output.innerText = "🔎 Searching Google...";
+
+      window.location.href =
+        "https://www.google.com/search?q=" +
+        encodeURIComponent(searchText);
+
+      return true;
+    }
+  }
+
+  // OPEN GOOGLE
+  if (
+    command === "open google" ||
+    command === "open google.com"
+  ) {
+    output.innerText = "🌐 Opening Google...";
+
+    window.location.href =
+      "https://www.google.com/";
+
+    return true;
+  }
+
+  // OPEN GMAIL
+  if (
+    command === "open gmail" ||
+    command === "open gmail.com"
+  ) {
+    output.innerText = "📧 Opening Gmail...";
+
+    window.location.href =
+      "https://mail.google.com/";
+
+    return true;
+  }
+
+  // OPEN WHATSAPP
+  if (
+    command === "open whatsapp" ||
+    command === "open whats app"
+  ) {
+    output.innerText = "💬 Opening WhatsApp...";
+
+    window.location.href =
+      "https://web.whatsapp.com/";
+
+    return true;
+  }
+
+  // OPEN INSTAGRAM
+  if (
+    command === "open instagram" ||
+    command === "open insta"
+  ) {
+    output.innerText = "📸 Opening Instagram...";
+
+    window.location.href =
+      "https://www.instagram.com/";
+
+    return true;
+  }
+
+  // OPEN GOOGLE MAPS
+  if (
+    command === "open google maps" ||
+    command === "open maps" ||
+    command === "open google map"
+  ) {
+    output.innerText = "🗺️ Opening Google Maps...";
+
+    window.location.href =
+      "https://www.google.com/maps/";
+
+    return true;
+  }
+
+  // NAVIGATE TO A PLACE
+  if (
+    command.startsWith("navigate to ") ||
+    command.startsWith("go to ") ||
+    command.startsWith("take me to ")
+  ) {
+
+    let destination = "";
+
+    if (command.startsWith("navigate to ")) {
+      destination =
+        command.substring("navigate to ".length);
+    }
+
+    else if (command.startsWith("go to ")) {
+      destination =
+        command.substring("go to ".length);
+    }
+
+    else if (command.startsWith("take me to ")) {
+      destination =
+        command.substring("take me to ".length);
+    }
+
+    if (destination.trim() !== "") {
+
+      output.innerText =
+        "🧭 Navigating to " +
+        destination +
+        "...";
+
+      const mapsURL =
+        "https://www.google.com/maps/dir/?api=1&destination=" +
+        encodeURIComponent(destination);
+
+      window.location.href = mapsURL;
+
+      return true;
+    }
+  }
+
+  return false;
+}
+
+
+// SEND TEXT
 async function sendText() {
 
-  const input = document.getElementById("textInput");
-  const output = document.getElementById("output");
+  const input =
+    document.getElementById("textInput");
 
-  const text = input.value.trim();
+  const output =
+    document.getElementById("output");
+
+  const text =
+    input.value.trim();
 
   if (!text) {
     return;
@@ -80,31 +275,53 @@ async function sendText() {
 
   input.value = "";
 
+  // First try command handling
+  const handled =
+    await handleCommand(text);
+
+  if (handled) {
+    return;
+  }
+
+  // Otherwise send to Gemini
   output.innerText =
-    "You: " + text + "\n\n⏳ Happy is thinking...";
+    "You: " +
+    text +
+    "\n\n⏳ Happy is thinking...";
 
   try {
 
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: text
-      })
-    });
+    const response =
+      await fetch("/api/chat", {
+        method: "POST",
 
-    const data = await response.json();
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          message: text
+        })
+      });
+
+    const data =
+      await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || "AI request failed");
+      throw new Error(
+        data.error ||
+        "AI request failed"
+      );
     }
 
-    const answer = data.answer;
+    const answer =
+      data.answer;
 
     output.innerText =
-      "You: " + text + "\n\nHappy: " + answer;
+      "You: " +
+      text +
+      "\n\nHappy: " +
+      answer;
 
     const voice =
       new SpeechSynthesisUtterance(answer);
@@ -116,7 +333,9 @@ async function sendText() {
     speechSynthesis.cancel();
     speechSynthesis.speak(voice);
 
-  } catch (error) {
+  }
+
+  catch (error) {
 
     console.error(error);
 
@@ -125,207 +344,145 @@ async function sendText() {
       error.message;
   }
 }
-    async function talk() {
 
-      const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
 
-      if (!SpeechRecognition) {
-        document.getElementById("output").innerText =
-          "Voice recognition is not supported.";
+// MICROPHONE
+async function talk() {
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+
+    document.getElementById("output").innerText =
+      "Voice recognition is not supported.";
+
+    return;
+  }
+
+  const button =
+    document.getElementById("talkButton");
+
+  const output =
+    document.getElementById("output");
+
+  const recognition =
+    new SpeechRecognition();
+
+  recognition.lang = "en-IN";
+  recognition.interimResults = false;
+  recognition.continuous = false;
+
+  button.disabled = true;
+
+  output.innerText =
+    "🎤 Listening...";
+
+  recognition.start();
+
+  recognition.onresult =
+    async function(event) {
+
+      const text =
+        event.results[0][0].transcript;
+
+      // First try the SAME commands as keyboard
+      const handled =
+        await handleCommand(text);
+
+      if (handled) {
+        button.disabled = false;
         return;
       }
 
-      const button = document.getElementById("talkButton");
-      const output = document.getElementById("output");
+      // Otherwise send to Gemini
+      output.innerText =
+        "You: " +
+        text +
+        "\n\n⏳ Happy is thinking...";
 
-      const recognition = new SpeechRecognition();
+      try {
 
-      recognition.lang = "en-IN";
-      recognition.interimResults = false;
-      recognition.continuous = false;
-
-      button.disabled = true;
-      output.innerText = "🎤 Listening...";
-
-      recognition.start();
-
-      recognition.onresult = async function(event) {
-
-        const text =
-          event.results[0][0].transcript;
-const command = text.toLowerCase().trim();
-
-  
-if (
-  command === "open youtube" ||
-  command === "open youtube.com"
-) {
-  output.innerText = "▶️ Opening YouTube...";
-  window.location.href = "https://www.youtube.com/";
-  return;
-}
-
-if (
-  command.startsWith("search ") &&
-  command.includes(" in youtube")
-) {
-  const searchText = command
-    .replace(/^search\s+/i, "")
-    .replace(/\s+in youtube$/i, "")
-    .trim();
-
-  if (searchText) {
-    output.innerText = "🔎 Searching YouTube...";
-    window.location.href =
-      "https://www.youtube.com/results?search_query=" +
-      encodeURIComponent(searchText);
-    return;
-  }
-}
-  
-
-     if (command.startsWith("search google for ")) {
-  const searchText = command.replace("search google for ", "").trim();
-
-  if (searchText) {
-    output.innerText = "🔎 Searching Google...";
-    window.location.href =
-      "https://www.google.com/search?q=" + encodeURIComponent(searchText);
-    return;
-  }
-     }   if (
-  command === "open google" ||
-  command === "open google.com"
-) {
-  output.innerText = "🌐 Opening Google...";
-  window.location.href = "https://www.google.com/";
-  return;
-     }if (
-  command === "open gmail" ||
-  command === "open gmail.com"
-) {
-  output.innerText = "📧 Opening Gmail...";
-  window.location.href = "https://mail.google.com/";
-  return;
-     }
-        if (
-  command === "open whatsapp" ||
-  command === "open whats app"
-) {
-  output.innerText = "💬 Opening WhatsApp...";
-  window.location.href = "https://web.whatsapp.com/";
-  return;
-     }if (
-  command === "open instagram" ||
-  command === "open insta"
-) {
-  output.innerText = "📸 Opening Instagram...";
-  window.location.href = "https://www.instagram.com/";
-  return;
-     }if (
-  command === "open google maps" ||
-  command === "open maps" ||
-  command === "open google map"
-) {
-  output.innerText = "🗺️ Opening Google Maps...";
-
-  window.location.href = "https://www.google.com/maps/";
-
-  return;
-}
-
-// Navigate to a place
-if (
-  command.startsWith("navigate to ") ||
-  command.startsWith("go to ") ||
-  command.startsWith("take me to ")
-) {
-  let destination = "";
-
-  if (command.startsWith("navigate to ")) {
-    destination = command.substring("navigate to ".length);
-  } else if (command.startsWith("go to ")) {
-    destination = command.substring("go to ".length);
-  } else if (command.startsWith("take me to ")) {
-    destination = command.substring("take me to ".length);
-  }
-
-  if (destination.trim() !== "") {
-    output.innerText = "🧭 Navigating to " + destination + "...";
-
-    const mapsURL =
-      "https://www.google.com/maps/dir/?api=1&destination=" +
-      encodeURIComponent(destination);
-
-    window.location.href = mapsURL;
-  }
-
-  return;
-}
-        output.innerText =
-          "You: " + text + "\n\n⏳ Happy is thinking...";
-
-        try {
-
-          const response = await fetch("/api/chat", {
+        const response =
+          await fetch("/api/chat", {
             method: "POST",
+
             headers: {
               "Content-Type": "application/json"
             },
+
             body: JSON.stringify({
               message: text
             })
           });
 
-          const data = await response.json();
+        const data =
+          await response.json();
 
-          if (!response.ok) {
-            throw new Error(data.error || "AI request failed");
-          }
-
-          const answer = data.answer;
-
-          output.innerText =
-            "You: " + text + "\n\nHappy: " + answer;
-
-          const voice =
-            new SpeechSynthesisUtterance(answer);
-
-          voice.lang = "en-IN";
-          voice.rate = 1;
-          voice.pitch = 1;
-
-          speechSynthesis.cancel();
-          speechSynthesis.speak(voice);
-
-        } catch (error) {
-
-          console.error(error);
-
-          output.innerText =
-            "Sorry, Happy couldn't connect to the AI.\n\n" +
-            error.message;
+        if (!response.ok) {
+          throw new Error(
+            data.error ||
+            "AI request failed"
+          );
         }
 
-        button.disabled = false;
-      };
-recognition.onerror = function(event) {
+        const answer =
+          data.answer;
 
-  console.error("Speech error:", event.error);
+        output.innerText =
+          "You: " +
+          text +
+          "\n\nHappy: " +
+          answer;
 
-  output.innerText =
-    "Speech error: " + event.error;
+        const voice =
+          new SpeechSynthesisUtterance(answer);
 
-  button.disabled = false;
-};
-      
+        voice.lang = "en-IN";
+        voice.rate = 1;
+        voice.pitch = 1;
 
-      recognition.onend = function() {
-        button.disabled = false;
-      };
-    }
+        speechSynthesis.cancel();
+        speechSynthesis.speak(voice);
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+        output.innerText =
+          "Sorry, Happy couldn't connect to the AI.\n\n" +
+          error.message;
+      }
+
+      button.disabled = false;
+    };
+
+
+  recognition.onerror =
+    function(event) {
+
+      console.error(
+        "Speech error:",
+        event.error
+      );
+
+      output.innerText =
+        "Speech error: " +
+        event.error;
+
+      button.disabled = false;
+    };
+
+
+  recognition.onend =
+    function() {
+
+      button.disabled = false;
+    };
+}
 
   </script>
 
