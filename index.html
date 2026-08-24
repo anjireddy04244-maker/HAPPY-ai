@@ -99,6 +99,23 @@ if (
     .replace(/^search\s+/i, "")
     .replace(/\s+in youtube$/i, "")
     .trim();
+if (
+  command === "open youtube" ||
+  command === "open youtube.com"
+) {
+  output.innerText = "▶️ Opening YouTube...";
+  window.location.href = "https://www.youtube.com/";
+  return;
+}
+
+if (
+  command.startsWith("search ") &&
+  command.includes(" in youtube")
+) {
+  const searchText = command
+    .replace(/^search\s+/i, "")
+    .replace(/\s+in youtube$/i, "")
+    .trim();
 
   if (searchText) {
     output.innerText = "🔎 Searching YouTube...";
@@ -108,6 +125,7 @@ if (
     return;
   }
 }
+  
 
      if (command.startsWith("search google for ")) {
   const searchText = command.replace("search google for ", "").trim();
