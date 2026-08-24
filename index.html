@@ -157,10 +157,7 @@ async function sendText() {
           event.results[0][0].transcript;
 const command = text.toLowerCase().trim();
 
-  const searchText = command
-    .replace(/^search\s+/i, "")
-    .replace(/\s+in youtube$/i, "")
-    .trim();
+  
 if (
   command === "open youtube" ||
   command === "open youtube.com"
